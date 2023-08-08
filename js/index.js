@@ -1,10 +1,20 @@
-import Book from './class.js';
+/* eslint-disable no-undef */
+/* eslint-disable no-unused-vars */
+/* eslint-disable max-classes-per-file */
+
+class Book {
+  constructor(title, author) {
+    this.title = title;
+    this.author = author;
+  }
+}
 
 class Library {
   constructor() {
     this.books = [];
   }
 
+  // Local Storage
   saveToLocalStorage() {
     localStorage.setItem('MY-Library', JSON.stringify(this.books));
   }
@@ -16,7 +26,7 @@ class Library {
         this.books = data;
       }
     } catch (error) {
-      this.saveToLocalStorage();
+      saveToLocalStorage();
     }
   }
 
@@ -34,16 +44,6 @@ class Library {
       this.getBooks();
       form.reset();
     }
-
-    const buttons = document.querySelectorAll('button');
-    buttons.forEach((button, index) => {
-      if (Number.isInteger(parseInt(button.id, 10))) {
-        button.addEventListener('click', (e) => {
-          removeBookFromDOM(index);
-          return e;
-        });
-      }
-    });
   }
 
   getBooks() {
@@ -55,7 +55,7 @@ class Library {
       <td>
         <article class="book">
           <p>"${book.title}" by ${book.author}</p>
-          <button type="button" id="${index}" class="btn remove-btn">Remove</button>
+          <button type="button" id="${index}" class="btn remove-btn" onclick="removeBookFromDOM(${index})">Remove</button>
         </article>
       </td>
     </tr>
@@ -84,16 +84,6 @@ function removeBookFromDOM(id) {
   if (id !== -1) {
     listBooks.removeBook(id);
   }
-
-  const buttons = document.querySelectorAll('button');
-  buttons.forEach((button, index) => {
-    if (Number.isInteger(parseInt(button.id, 10))) {
-      button.addEventListener('click', (e) => {
-        removeBookFromDOM(index);
-        return e;
-      });
-    }
-  });
 }
 
 const form = document.querySelector('#form');
@@ -105,13 +95,3 @@ form.addEventListener('submit', (event) => {
 listBooks.getDataFromLocalStorage();
 listBooks.getBooks();
 removeBookFromDOM(-1);
-
-const buttons = document.querySelectorAll('button');
-buttons.forEach((button, index) => {
-  if (Number.isInteger(parseInt(button.id, 10))) {
-    button.addEventListener('click', (e) => {
-      removeBookFromDOM(index);
-      return e;
-    });
-  }
-});
