@@ -28,7 +28,7 @@ class BookLibrary {
       booksHTML += `
         <article class="book">
           <p>${book.title} <br> ${book.author}</p>
-          <button type="button" id="${index}" class="remove-btn">Remove</button>
+          <button type="button" data-index="${index}" class="remove-btn">Remove</button>
           <hr>
         </article>
       `;
@@ -41,12 +41,13 @@ class BookLibrary {
     this.section.innerHTML = booksHTML;
 
     const removeButtons = document.querySelectorAll('.remove-btn');
-    removeButtons.forEach((button, index) => {
-      button.addEventListener('click', () => this.removeBook(index));
+    removeButtons.forEach(button => {
+      button.addEventListener('click', this.removeBook.bind(this));
     });
   }
 
-  removeBook(index) {
+  removeBook(event) {
+    const index = parseInt(event.target.getAttribute('data-index'));
     this.books.splice(index, 1);
     this.saveToLocalStorage();
     this.displayBooks();
@@ -56,7 +57,7 @@ class BookLibrary {
     event.preventDefault();
     const bookTitle = this.titleInput.value;
     const bookAuthor = this.authorInput.value;
-    
+
     if (bookTitle.trim().length !== 0 && bookAuthor.trim().length !== 0) {
       const newBook = { title: bookTitle, author: bookAuthor };
       this.books.push(newBook);
