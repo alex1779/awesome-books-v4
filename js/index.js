@@ -50,8 +50,8 @@ class BookLibrary {
 
   addBook(event) {
     event.preventDefault();
-    const bookTitle = this.titleInput.value;
-    const bookAuthor = this.authorInput.value;
+    const { value: bookTitle } = this.titleInput;
+    const { value: bookAuthor } = this.authorInput;
 
     if (bookTitle.trim().length !== 0 && bookAuthor.trim().length !== 0) {
       const newBook = { title: bookTitle, author: bookAuthor };
