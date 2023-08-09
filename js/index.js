@@ -68,4 +68,6 @@ class BookLibrary {
   }
 }
 
-new BookLibrary();
+(() => {
+  new BookLibrary();
+})();
