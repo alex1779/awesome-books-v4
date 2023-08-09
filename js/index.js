@@ -16,12 +16,12 @@ class Library {
 
   // Local Storage
   saveToLocalStorage() {
-    localStorage.setItem('MY-Library', JSON.stringify(this.books));
+    localStorage.setItem('Library', JSON.stringify(this.books));
   }
 
   getDataFromLocalStorage() {
     try {
-      const data = JSON.parse(localStorage.getItem('MY-Library'));
+      const data = JSON.parse(localStorage.getItem('Library'));
       if (data !== null) {
         this.books = data;
       }
@@ -30,6 +30,7 @@ class Library {
     }
   }
 
+// Add book method
   addBook() {
     const form = document.querySelector('#form');
     const title = document.querySelector('#title');
