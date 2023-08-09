@@ -1,4 +1,4 @@
-class BookLibrary {
+class Library {
   constructor() {
     this.books = this.getDataFromLocalStorage() || [];
     this.section = document.querySelector('#book-list');
@@ -6,7 +6,7 @@ class BookLibrary {
     this.authorInput = document.querySelector('#author');
     this.form = document.querySelector('#form');
     this.form.addEventListener('submit', this.addBook.bind(this));
-    this.attachRemoveButtonListeners();
+    this.displayBooks();
   }
 
   saveToLocalStorage() {
@@ -19,30 +19,30 @@ class BookLibrary {
   }
 
   displayBooks() {
-    this.section.innerHTML = this.books.length === 0
-      ? '<p>Library is empty...</p>'
-      : this.books.map((book, index) => this.renderBook(book, index)).join('');
-  }
+    let booksHtml = '';
 
-  renderBook(book, index) {
-    return `
-      <article class="book">
+    this.books.forEach((book, index) => {
+      booksHtml += `<article class="book">
         <p>${book.title} <br> ${book.author}</p>
         <button type="button" data-index="${index}" class="remove-btn">Remove</button>
         <hr>
       </article>`;
-  }
+    });
 
-  attachRemoveButtonListeners() {
-    this.section.addEventListener('click', (event) => {
-      if (event.target.classList.contains('remove-btn')) {
-        const index = event.target.dataset.index;
-        this.removeBook(index);
-      }
+    if (this.books.length === 0) {
+      booksHtml = '<p>Library is empty...</p>';
+    }
+
+    this.section.innerHTML = booksHtml;
+
+    const removeButtons = document.querySelectorAll('.remove-btn');
+    removeButtons.forEach(button => {
+      button.addEventListener('click', this.removeBook.bind(this));
     });
   }
 
-  removeBook(index) {
+  removeBook(event) {
+    const index = parseInt(event.target.getAttribute('data-index'));
     this.books.splice(index, 1);
     this.saveToLocalStorage();
     this.displayBooks();
@@ -50,10 +50,11 @@ class BookLibrary {
 
   addBook(event) {
     event.preventDefault();
-    const { value: bookTitle } = this.titleInput;
-    const { value: bookAuthor } = this.authorInput;
 
-    if (bookTitle.trim().length !== 0 && bookAuthor.trim().length !== 0) {
+    const bookTitle = this.titleInput.value.trim();
+    const bookAuthor = this.authorInput.value.trim();
+
+    if (bookTitle.length !== 0 && bookAuthor.length !== 0) {
       const newBook = { title: bookTitle, author: bookAuthor };
       this.books.push(newBook);
       this.saveToLocalStorage();
@@ -64,5 +65,4 @@ class BookLibrary {
   }
 }
 
-const bookLibrary = new BookLibrary();
-bookLibrary.displayBooks();
+const library = new Library();
