@@ -1,20 +1,20 @@
 class BookLibrary {
   constructor() {
     this.books = [];
-    this.section = document.querySelector('#book-list');
-    this.titleInput = document.querySelector('#title');
-    this.authorInput = document.querySelector('#author');
-    this.form = document.querySelector('#form');
-    this.form.addEventListener('submit', this.addBook.bind(this));
+    this.section = document.querySelector("#book-list");
+    this.titleInput = document.querySelector("#title");
+    this.authorInput = document.querySelector("#author");
+    this.form = document.querySelector("#form");
+    this.form.addEventListener("submit", this.addBook.bind(this));
     this.displayBooks();
   }
 
   saveToLocalStorage() {
-    localStorage.setItem('Library', JSON.stringify(this.books));
+    localStorage.setItem("Library", JSON.stringify(this.books));
   }
 
   getDataFromLocalStorage() {
-    const data = JSON.parse(localStorage.getItem('Library'));
+    const data = JSON.parse(localStorage.getItem("Library"));
     if (data !== null) {
       this.books = data;
     }
@@ -22,7 +22,7 @@ class BookLibrary {
 
   displayBooks() {
     this.getDataFromLocalStorage();
-    let booksHTML = '';
+    let booksHTML = "";
 
     this.books.forEach((book, index) => {
       booksHTML += `
@@ -35,14 +35,14 @@ class BookLibrary {
     });
 
     if (this.books.length === 0) {
-      booksHTML = '<p>Library is empty...</p>';
+      booksHTML = "<p>Library is empty...</p>";
     }
 
     this.section.innerHTML = booksHTML;
 
-    const removeButtons = document.querySelectorAll('.remove-btn');
+    const removeButtons = document.querySelectorAll(".remove-btn");
     removeButtons.forEach((button, index) => {
-      button.addEventListener('click', () => this.removeBook(index));
+      button.addEventListener("click", () => this.removeBook(index));
     });
   }
 
@@ -56,16 +56,16 @@ class BookLibrary {
     event.preventDefault();
     const bookTitle = this.titleInput.value;
     const bookAuthor = this.authorInput.value;
-    
+
     if (bookTitle.trim().length !== 0 && bookAuthor.trim().length !== 0) {
       const newBook = { title: bookTitle, author: bookAuthor };
       this.books.push(newBook);
       this.saveToLocalStorage();
       this.displayBooks();
-      this.titleInput.value = '';
-      this.authorInput.value = '';
+      this.titleInput.value = "";
+      this.authorInput.value = "";
     }
   }
 }
 
-const bookLibrary = new BookLibrary();
+// const bookLibrary = new BookLibrary();
