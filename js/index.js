@@ -1,12 +1,15 @@
+class Book {
+  constructor(title, author) {
+    this.title = title;
+    this.author = author;
+  }
+}
+
 class Library {
   constructor() {
-    this.books = this.getDataFromLocalStorage() || [];
-    this.section = document.querySelector('#book-list');
-    this.titleInput = document.querySelector('#title');
-    this.authorInput = document.querySelector('#author');
-    this.form = document.querySelector('#form');
-    this.form.addEventListener('submit', this.addBook.bind(this));
-    this.displayBooks();
+    this.books = [];
+    this.getDataFromLocalStorage();
+    this.getBooks();
   }
 
   saveToLocalStorage() {
@@ -14,26 +17,50 @@ class Library {
   }
 
   getDataFromLocalStorage() {
-    const data = JSON.parse(localStorage.getItem('Library'));
-    return data !== null ? data : [];
+    try {
+      const data = JSON.parse(localStorage.getItem('Library'));
+      if (data !== null) {
+        this.books = data;
+      }
+    } catch (error) {
+      this.saveToLocalStorage(); // Call the class method
+    }
   }
 
-  displayBooks() {
-    let booksHtml = '';
+  addBook() {
+    const form = document.querySelector('#form');
+    const title = document.querySelector('#title');
+    const author = document.querySelector('#author');
+    const bookTitle = title.value;
+    const bookAuthor = author.value;
 
-    this.books.forEach((book, index) => {
-      booksHtml += `<article class="book">
-        <p>${book.title} <br> ${book.author}</p>
-        <button type="button" data-index="${index}" class="remove-btn">Remove</button>
-        <hr>
-      </article>`;
-    });
-
-    if (this.books.length === 0) {
-      booksHtml = '<p>Library is empty...</p>';
+    if (bookTitle.trim().length !== 0 && bookAuthor.trim().length !== 0) {
+      const objBook = new Book(bookTitle, bookAuthor);
+      this.books.push(objBook);
+      this.saveToLocalStorage();
+      this.getBooks();
+      form.reset();
     }
+  }
 
-    this.section.innerHTML = booksHtml;
+  getBooks() {
+    const section = document.querySelector('#book-list');
+    let booksHtml = '<table>';
+    this.books.forEach((book, index) => {
+      booksHtml += `<tr>
+        <td>
+          <article class="book">
+            <p>"${book.title}" by ${book.author}</p>
+            <button type="button" data-id="${index}" class="btn remove-btn">Remove</button>
+          </article>
+        </td>
+      </tr>`;
+    });
+    if (this.books.length === 0) {
+      booksHtml += '<tr><td><p class="empty-library">Library is empty...</p></td></tr>';
+    }
+    booksHtml += '</table>';
+    section.innerHTML = booksHtml;
 
     const removeButtons = document.querySelectorAll('.remove-btn');
     removeButtons.forEach(button => {
@@ -42,27 +69,18 @@ class Library {
   }
 
   removeBook(event) {
-    const index = parseInt(event.target.getAttribute('data-index'));
-    this.books.splice(index, 1);
+    const bookId = parseInt(event.target.getAttribute('data-id'));
+    const filteredBooks = this.books.filter((book, index) => bookId !== index);
+    this.books = filteredBooks;
     this.saveToLocalStorage();
-    this.displayBooks();
-  }
-
-  addBook(event) {
-    event.preventDefault();
-
-    const bookTitle = this.titleInput.value.trim();
-    const bookAuthor = this.authorInput.value.trim();
-
-    if (bookTitle.length !== 0 && bookAuthor.length !== 0) {
-      const newBook = { title: bookTitle, author: bookAuthor };
-      this.books.push(newBook);
-      this.saveToLocalStorage();
-      this.displayBooks();
-      this.titleInput.value = '';
-      this.authorInput.value = '';
-    }
+    this.getBooks();
   }
 }
 
-const library = new Library();
+const listBooks = new Library();
+
+const form = document.querySelector('#form');
+form.addEventListener('submit', event => {
+  event.preventDefault();
+  listBooks.addBook();
+});
