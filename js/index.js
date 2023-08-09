@@ -1,12 +1,12 @@
 class BookLibrary {
   constructor() {
-    this.books = [];
+    this.books = this.getDataFromLocalStorage() || [];
     this.section = document.querySelector('#book-list');
     this.titleInput = document.querySelector('#title');
     this.authorInput = document.querySelector('#author');
     this.form = document.querySelector('#form');
     this.form.addEventListener('submit', this.addBook.bind(this));
-    this.displayBooks();
+    this.attachRemoveButtonListeners();
   }
 
   saveToLocalStorage() {
@@ -15,34 +15,30 @@ class BookLibrary {
 
   getDataFromLocalStorage() {
     const data = JSON.parse(localStorage.getItem('Library'));
-    if (data !== null) {
-      this.books = data;
-    }
+    return data !== null ? data : [];
   }
 
   displayBooks() {
-    this.getDataFromLocalStorage();
-    let booksHTML = '';
+    this.section.innerHTML = this.books.length === 0
+      ? '<p>Library is empty...</p>'
+      : this.books.map((book, index) => this.renderBook(book, index)).join('');
+  }
 
-    this.books.forEach((book, index) => {
-      booksHTML += `
-        <article class='book'>
-          <p>${book.title} <br> ${book.author}</p>
-          <button type='button' id='${index}' class='remove-btn'>Remove</button>
-          <hr>
-        </article>
-      `;
-    });
+  renderBook(book, index) {
+    return `
+      <article class="book">
+        <p>${book.title} <br> ${book.author}</p>
+        <button type="button" data-index="${index}" class="remove-btn">Remove</button>
+        <hr>
+      </article>`;
+  }
 
-    if (this.books.length === 0) {
-      booksHTML = '<p>Library is empty...</p>';
-    }
-
-    this.section.innerHTML = booksHTML;
-
-    const removeButtons = document.querySelectorAll('.remove-btn');
-    removeButtons.forEach((button, index) => {
-      button.addEventListener('click', () => this.removeBook(index));
+  attachRemoveButtonListeners() {
+    this.section.addEventListener('click', event => {
+      if (event.target.classList.contains('remove-btn')) {
+        const index = event.target.dataset.index;
+        this.removeBook(index);
+      }
     });
   }
 
@@ -68,6 +64,5 @@ class BookLibrary {
   }
 }
 
-(() => {
-  new BookLibrary();
-})();
+const bookLibrary = new BookLibrary();
+bookLibrary.displayBooks();
