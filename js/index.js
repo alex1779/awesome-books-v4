@@ -34,7 +34,7 @@ class BookLibrary {
   }
 
   attachRemoveButtonListeners() {
-    this.section.addEventListener('click', event => {
+    this.section.addEventListener('click', (event) => {
       if (event.target.classList.contains('remove-btn')) {
         const index = event.target.dataset.index;
         this.removeBook(index);
