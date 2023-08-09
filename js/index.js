@@ -30,7 +30,7 @@ class Library {
     }
   }
 
-// Add book method
+  // Add book method
   addBook() {
     const form = document.querySelector('#form');
     const title = document.querySelector('#title');
