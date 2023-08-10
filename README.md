@@ -173,8 +173,9 @@ Example:
 
 
 👤 **Donice Ubaru**
-
-- GitHub: [@Booze33](https://github.com/donice)
+- GitHub: [@donice](https://github.com/donice/)
+- Twitter: [@drdonice](https://twitter.com/drdonice)
+- LinkedIn: [Donice Ubaru](https://www.linkedin.com/in/doniceubaru/)
 
 
 
