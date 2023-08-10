@@ -73,7 +73,6 @@ function removeBookFromDOM(id) {
   if (id !== -1) {
     listBooks.removeBook(id);
   }
-}
 
 function deleteButtons1() {
   const buttons = document.querySelectorAll('button');
