@@ -17,7 +17,7 @@ class Library {
         this.books = data;
       }
     } catch (error) {
-      saveToLocalStorage();
+      this.saveToLocalStorage();
     }
   }
 
@@ -31,7 +31,6 @@ class Library {
     this.saveToLocalStorage();
     this.getBooks();
     form.reset();
-  
   }
 
   getBooks() {
@@ -55,14 +54,15 @@ class Library {
     }
     books += '</table>';
     section.innerHTML = books;
-    deleteButtons1();
   }
 
   removeBook(bookId) {
     const filteredBooks = this.books.filter((book, index) => bookId !== index);
     this.books = filteredBooks;
     this.saveToLocalStorage();
-    this.getBooks();
+    const books = document.getElementsByClassName('book');
+    books[bookId].remove();
+    window.location.reload();
   }
 }
 
@@ -91,9 +91,10 @@ const form = document.querySelector('#form');
 form.addEventListener('submit', (event) => {
   event.preventDefault();
   listBooks.addBook();
-  deleteButtons1()
+  deleteButtons1();
 });
 
 listBooks.getDataFromLocalStorage();
 listBooks.getBooks();
+deleteButtons1();
 removeBookFromDOM(-1);
