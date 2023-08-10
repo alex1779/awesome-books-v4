@@ -1,9 +1,4 @@
-class Book {
-  constructor(title, author) {
-    this.title = title;
-    this.author = author;
-  }
-}
+import Book from './class.js';
 
 class Library {
   constructor() {
@@ -29,18 +24,14 @@ class Library {
   // Add book method
   addBook() {
     const form = document.querySelector('#form');
-    const title = document.querySelector('#title');
-    const author = document.querySelector('#author');
-    const bookTitle = title.value;
-    const bookAuthor = author.value;
-
-    if (bookTitle.trim().length !== 0 && bookAuthor.trim().length !== 0) {
-      const objBook = new Book(bookTitle, bookAuthor);
-      this.books.push(objBook);
-      this.saveToLocalStorage();
-      this.getBooks();
-      form.reset();
-    }
+    const bookTitle = document.querySelector('#title').value;
+    const bookAuthor = document.querySelector('#author').value;
+    const objBook = new Book(bookTitle, bookAuthor);
+    this.books.push(objBook);
+    this.saveToLocalStorage();
+    this.getBooks();
+    form.reset();
+  
   }
 
   getBooks() {
@@ -52,7 +43,7 @@ class Library {
       <td>
         <article class="book">
           <p>"${book.title}" by ${book.author}</p>
-          <button type="button" id="${index}" class="btn remove-btn" onclick="removeBookFromDOM(${index})">Remove</button>
+          <button type="button" id="${index}" class="btn remove-btn" >Remove</button>
         </article>
       </td>
     </tr>
@@ -64,6 +55,7 @@ class Library {
     }
     books += '</table>';
     section.innerHTML = books;
+    deleteButtons1();
   }
 
   removeBook(bookId) {
@@ -83,10 +75,23 @@ function removeBookFromDOM(id) {
   }
 }
 
+function deleteButtons1() {
+  const buttons = document.querySelectorAll('button');
+  buttons.forEach((button, index) => {
+    if (Number.isInteger(parseInt(button.id, 10))) {
+      button.addEventListener('click', (e) => {
+        removeBookFromDOM(index);
+        return e;
+      });
+    }
+  });
+}
+
 const form = document.querySelector('#form');
 form.addEventListener('submit', (event) => {
   event.preventDefault();
   listBooks.addBook();
+  deleteButtons1()
 });
 
 listBooks.getDataFromLocalStorage();
